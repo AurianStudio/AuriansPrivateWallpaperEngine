@@ -19,8 +19,10 @@ namespace Lively.Gallery.Client
         private ManualResetEventSlim _slim;
         private string _authLink;
         private readonly string _githubAuthLink;
+        private readonly bool _useVSthemes;
+        private readonly VSthemesGalleryService? _vsthemesService;
 
-        public GalleryClient(IHttpClientFactory httpClientFactory, string host, string authLink, string githubAuthLink, ITokenStore tokenStore)
+        public GalleryClient(IHttpClientFactory httpClientFactory, string host, string authLink, string githubAuthLink, ITokenStore tokenStore, bool useVSthemes = false)
         {
             _client = httpClientFactory.CreateClient();
             _client.BaseAddress = new Uri(host);
@@ -28,13 +30,17 @@ namespace Lively.Gallery.Client
             _slim = new ManualResetEventSlim();
             _authLink = authLink;
             _githubAuthLink = githubAuthLink;
+            _useVSthemes = useVSthemes;
+            if (_useVSthemes)
+                _vsthemesService = new VSthemesGalleryService(httpClientFactory);
             Host = host;
         }
 
         public string Host { get; }
+        public bool UseVSthemes => _useVSthemes;
         public ProfileDto CurrentUser { get; set; }
         public TokensModel Tokens => _tokenStore.Get();
-        public bool IsLoggedIn { get => CurrentUser != null && _tokenStore.Get().Expiration > DateTime.UtcNow; }
+        public bool IsLoggedIn { get => _useVSthemes || (CurrentUser != null && _tokenStore.Get().Expiration > DateTime.UtcNow); }
         public event EventHandler<object> LoggedIn;
         public event EventHandler<object> LoggedOut;
 
@@ -42,6 +48,12 @@ namespace Lively.Gallery.Client
 
         public async Task InitializeAsync()
         {
+            if (_useVSthemes)
+            {
+                CurrentUser = new ProfileDto { DisplayName = "Aurian" };
+                LoggedIn?.Invoke(this, EventArgs.Empty);
+                return;
+            }
             var result = await GetMeAsync();
             CurrentUser = result;
             if (CurrentUser != null)
@@ -171,8 +183,28 @@ namespace Lively.Gallery.Client
         }
         #endregion     
         #region Gallery
+        public string? GetVSthemesDownloadExtension(string id) => _vsthemesService?.GetCachedDownloadExtension(id);
+
+        public async Task<string> GetDownloadExtensionAsync(string id, CancellationToken ct = default)
+        {
+            if (_useVSthemes && _vsthemesService != null)
+            {
+                await _vsthemesService.ResolveDownloadUrlAsync(id, ct);
+                return _vsthemesService.GetCachedDownloadExtension(id) ?? ".zip";
+            }
+            return ".zip";
+        }
+
         public async Task DownloadWallpaperAsync(string id, string fileName, CancellationToken ct, Action<float, float, float> progressCallback = null)
         {
+            if (_useVSthemes && _vsthemesService != null)
+            {
+                var downloadUrl = await _vsthemesService.ResolveDownloadUrlAsync(id, ct);
+                if (string.IsNullOrEmpty(downloadUrl))
+                    throw new InvalidOperationException("Could not find download link on vsthemes.org");
+                await _vsthemesService.DownloadFileAsync(downloadUrl, fileName, ct, progressCallback);
+                return;
+            }
             var message = new HttpRequestMessage(HttpMethod.Get, $"gallery/{id}/download");
             await DownloadFile(message, fileName, ct, true, progressCallback);
         }
@@ -200,6 +232,15 @@ namespace Lively.Gallery.Client
 
         public async Task<Page<WallpaperDto>> SearchWallpapers(SearchQuery searchQuery)
         {
+            if (_useVSthemes && _vsthemesService != null)
+            {
+                var page = await _vsthemesService.SearchWallpapersAsync(searchQuery.Page, searchQuery.Limit, searchQuery.Name);
+                foreach (var item in page.Data)
+                {
+                    item.Preview = item.IsPreviewAvailable ? item.Preview : null;
+                }
+                return page;
+            }
             var uri = "gallery/search?";
             uri += $"sortBy={searchQuery.SortingType}";
             uri += $"&page={searchQuery.Page}";
@@ -235,6 +276,11 @@ namespace Lively.Gallery.Client
         //TODO: Make it return result instead of throwing? or remove bool return?
         public async Task<bool> SubscribeToWallpaperAsync(string id)
         {
+            if (_useVSthemes)
+            {
+                WallpaperSubscribed?.Invoke(this, id);
+                return true;
+            }
             try
             {
                 var message = new HttpRequestMessage(HttpMethod.Put, $"users/@me/wallpapers/{id}");

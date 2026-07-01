@@ -23,8 +23,8 @@ namespace Lively.Common
             public static string MusicAppExclusionRulesPath { get; } = Path.Combine(AppDataDir, "MusicAppExclusionRules.json");
             public static string WeatherSettingsPath { get; } = Path.Combine(AppDataDir, "WeatherSettings.json");
             public static string ThemeDir { get; } = Path.Combine(AppDataDir, "Themes");
-            public static string ThemeCacheDir { get; } = Path.Combine(Path.GetTempPath(), "Lively Wallpaper", "themes");
-            public static string CefRootCacheDir { get; } = Path.Combine(Path.GetTempPath(), "Lively Wallpaper", "CEF");
+            public static string ThemeCacheDir { get; } = Path.Combine(Path.GetTempPath(), "Aurian", "themes");
+            public static string CefRootCacheDir { get; } = Path.Combine(Path.GetTempPath(), "Aurian", "CEF");
             public static string TokensPath { get; } = Path.Combine(AppDataDir, "Tokens.dat");
             public static string ScreenshotDir { get; } = Path.Combine(AppDataDir, "Screenshots");
         }
@@ -77,8 +77,13 @@ namespace Lively.Common
         
         public static class ApplicationType
         {
-            public static string Name { get; } = "Lively Wallpaper";
+            public static string Name { get; } = "Aurian";
             public static bool IsTestBuild { get; } = false;
+        }
+
+        public static class Gallery
+        {
+            public static string MerchantUrl { get; } = "https://vsthemes.org/en/wallpapers/";
         }
 
         public static class Weather

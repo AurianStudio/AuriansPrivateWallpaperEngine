@@ -144,7 +144,7 @@ Windows Explorer restarted twice in the last 30 seconds! This may be a conflict 
     <value>Incompatible program found, taskbar theming disabled</value>
   </data>
   <data name="Website.Description" xml:space="preserve">
-    <value>Official webpage of Lively Wallpaper</value>
+    <value>Official webpage of Aurian</value>
   </data>
   <data name="DescOledScreensaverNotice" xml:space="preserve">
     <value>Most modern LCD and LED displays do not suffer from burn-in issue and therefore any wallpaper can be used as screensaver.
@@ -710,7 +710,7 @@ If still not working, close &amp; start Lively again/restart windows.
     <value>Applications fullscreen</value>
   </data>
   <data name="TitleAppName" xml:space="preserve">
-    <value>Lively Wallpaper</value>
+    <value>Aurian</value>
   </data>
   <data name="AppRules.Header" xml:space="preserve">
     <value>Application Rules</value>
@@ -936,7 +936,7 @@ If still not working, close &amp; start Lively again/restart windows.
     <value>Active Wallpaper(s)</value>
   </data>
   <data name="TitleGallery" xml:space="preserve">
-    <value>Gallery</value>
+    <value>Aurian Gallery</value>
   </data>
   <data name="AboutMe.Text" xml:space="preserve">
     <value>Hi, I'm Dani John also known as rocksdanister. I developed Lively a Free and open-source (FOSS) wallpaper application. Thanks for taking the time to look at my work.</value>

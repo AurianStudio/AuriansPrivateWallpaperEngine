@@ -17,9 +17,9 @@
             <NavigationView.MenuItems>
                 <NavigationViewItem
                     x:Uid="GalleryPageHome"
-                    Icon="Home"
-                    IsEnabled="False"
-                    Tag="featured" />
+                    Content="Browse Web"
+                    Icon="Globe"
+                    Tag="browse" />
                 <NavigationViewItem
                     x:Uid="GalleryPageCollection"
                     Icon="Library"
@@ -29,12 +29,18 @@
             </NavigationView.MenuItems>
             <NavigationView.FooterMenuItems>
                 <NavigationViewItem
+                    Content="Aurian Gallery"
+                    Icon="Shop"
+                    IsEnabled="False" />
+                <NavigationViewItem
                     x:Uid="GalleryPageManage"
                     Icon="Manage"
+                    IsEnabled="False"
                     Tag="subscription" />
                 <NavigationViewItem
                     x:Uid="GalleryPageProfile"
                     Icon="Contact"
+                    IsEnabled="False"
                     Tag="profile" />
             </NavigationView.FooterMenuItems>
             <Frame x:Name="contentFrame" />

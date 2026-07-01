@@ -57,7 +57,7 @@ namespace Lively.UI.WinUI
         {
             if (!AppLifeCycleUtil.IsAppMutexRunning(SingleInstance.UniqueAppName))
             {
-                _ = NativeMethods.MessageBox(IntPtr.Zero, "Wallpaper core is not running, run Lively.exe first before opening UI.", "Lively Wallpaper", 16);
+                _ = NativeMethods.MessageBox(IntPtr.Zero, "Wallpaper core is not running, run Aurian.exe first before opening UI.", "Aurian", 16);
                 //Sad dev noises.. this.Exit() does not work without Window: https://github.com/microsoft/microsoft-ui-xaml/issues/5931
                 Process.GetCurrentProcess().Kill();
             }
@@ -145,15 +145,14 @@ namespace Lively.UI.WinUI
                 .AddSingleton<IMainNavigator, MainNavigator>()
                 .AddSingleton<MainWindow>()
                 .AddSingleton<MainViewModel>()
-                .AddSingleton<GalleryClient>((e) => new GalleryClient(e.GetRequiredService<IHttpClientFactory>(), "http://api.livelywallpaper.net/api/",
-                    "https://accounts.google.com/o/oauth2/auth/oauthchooseaccount?client_id=923081992071-qg27j4uhasb3r4lasb9cb19nbhvgbb34.apps.googleusercontent.com&redirect_uri=http://127.0.0.1:43821/signin-oidc&scope=email%20openid%20profile&response_type=code&state=asdafwswdwefwsdg&flowName=GeneralOAuthFlow",
-                    "https://github.com/login/oauth/authorize?client_id=bbfd46fbb54895ecee74&redirect_uri=http://127.0.0.1:43821/signin-oidc-github&scope=user:email",
-                    new JsonTokenStore()))
+                .AddSingleton<GalleryClient>((e) => new GalleryClient(e.GetRequiredService<IHttpClientFactory>(), Constants.Gallery.MerchantUrl,
+                    string.Empty, string.Empty,
+                    new JsonTokenStore(), useVSthemes: true))
                 .AddSingleton<LibraryViewModel>() //Storing and tracking library items.
                 .AddSingleton<GalleryViewModel>()
                 .AddSingleton<GallerySubscriptionViewModel>()
                 .AddSingleton<AppUpdateViewModel>()
-                .AddSingleton<ICacheService, DiskCacheService>((e) => new DiskCacheService(e.GetRequiredService<IHttpClientFactory>(), Path.Combine(Path.GetTempPath(), "Lively Wallpaper", "gallery")))
+                .AddSingleton<ICacheService, DiskCacheService>((e) => new DiskCacheService(e.GetRequiredService<IHttpClientFactory>(), Path.Combine(Path.GetTempPath(), "Aurian", "gallery")))
                 .AddSingleton<IDepthEstimate, MiDaS>()
                 // Scoped
                 .AddScoped<IDialogNavigator, DialogNavigator>()

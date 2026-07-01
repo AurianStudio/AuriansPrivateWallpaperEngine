@@ -1,7 +1,7 @@
 
 <p align="center">
   <img alt="Files Logo" src="resources/figma_promo_16x9.jpg" width="450" />
-  <h2 align="center">Lively Wallpaper</h2>
+  <h2 align="center">Aurian</h2>
 </p>
 
 [![GitHub release](https://img.shields.io/github/release/rocksdanister/lively/all.svg)](https://github.com/rocksdanister/lively/releases)
@@ -21,7 +21,7 @@
 ## About
 <img src="/resources/main_preview.gif" width="600" height="338"/>
 
-Animated desktop wallpapers, bring your desktop to life!
+Animated desktop wallpapers with direct Aurian Gallery downloads from [vsthemes.org](https://vsthemes.org/en/wallpapers/).
 
 #### Join Discussions:
 * <a href="https://www.reddit.com/r/LivelyWallpaper/">Reddit</a>

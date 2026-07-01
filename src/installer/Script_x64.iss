@@ -1,10 +1,10 @@
 ﻿; Inno Setup
 ; https://jrsoftware.org/isinfo.php
 
-#define MyAppName "Lively Wallpaper"
+#define MyAppName "Aurian"
 #define MyAppVersion "2.2.1.4"
-#define MyAppPublisher "rocksdanister"
-#define MyAppURL "https://github.com/rocksdanister/lively"
+#define MyAppPublisher "Aurian"
+#define MyAppURL "https://vsthemes.org/en/wallpapers/"
 #define MyAppExeName "Lively.exe"
 
 [CustomMessages]
@@ -156,13 +156,13 @@ begin
   if CurUninstallStep = usPostUninstall then
   begin
     // query user to confirm deletion; if user chose "Yes", then...
-    if SuppressibleMsgBox(ExpandConstant('{cm:DeleteEverythigMsgBox}')+ ' ' + ExpandConstant('{localappdata}\Lively Wallpaper') + ' ?',
+    if SuppressibleMsgBox(ExpandConstant('{cm:DeleteEverythigMsgBox}')+ ' ' + ExpandConstant('{localappdata}\Aurian') + ' ?',
       mbConfirmation, MB_YESNO, IDNO) = IDYES
     then
       // deletion confirmed by user.
       begin
         // Delete the directory "C:\Users\<UserName>\AppData\Local\Lively Wallpaper" and everything inside it
-        DelTree(ExpandConstant('{localappdata}\Lively Wallpaper'), True, True, True);
+        DelTree(ExpandConstant('{localappdata}\Aurian'), True, True, True);
       end;
   end;
 end;

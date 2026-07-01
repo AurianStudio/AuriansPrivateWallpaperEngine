@@ -38,7 +38,7 @@ namespace Lively.UI.Shared.ViewModels
             this.cacheService = cacheService;
             this.dispatcher = dispatcher;
 
-            if (!galleryClient.IsLoggedIn)
+            if (!galleryClient.IsLoggedIn && !galleryClient.UseVSthemes)
                 return;
 
             Wallpapers = new IncrementalLoadingCollection<GalleryViewModel, GalleryModel>(this);

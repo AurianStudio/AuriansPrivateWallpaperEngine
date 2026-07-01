@@ -34,12 +34,42 @@
 
     <Grid>
         <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
             <RowDefinition Height="50" />
         </Grid.RowDefinitions>
 
+        <Border
+            Grid.Row="0"
+            Margin="8,8,8,0"
+            Padding="16,12"
+            Background="{ThemeResource AcrylicBackgroundFillColorDefaultBrush}"
+            CornerRadius="8">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+                <StackPanel Spacing="2">
+                    <TextBlock
+                        FontSize="20"
+                        FontWeight="SemiBold"
+                        Text="Aurian Gallery" />
+                    <TextBlock
+                        Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                        Text="Download wallpapers directly — powered by vsthemes.org" />
+                </StackPanel>
+                <HyperlinkButton
+                    Grid.Column="1"
+                    VerticalAlignment="Center"
+                    Content="Visit Gallery"
+                    NavigateUri="https://vsthemes.org/en/wallpapers/" />
+            </Grid>
+        </Border>
+
         <GridView
             x:Name="gridView"
+            Grid.Row="1"
             Margin="5"
             HorizontalAlignment="Stretch"
             VerticalAlignment="Stretch"
@@ -211,7 +241,7 @@
             </GridView.ItemContainerStyle>
         </GridView>
 
-        <Grid Grid.Row="1">
+        <Grid Grid.Row="2">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="Auto" />

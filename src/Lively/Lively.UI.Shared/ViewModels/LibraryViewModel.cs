@@ -445,7 +445,10 @@ namespace Lively.UI.Shared.ViewModels
         {
             var libItem = wallpaperLibraryFactory.CreateFromMetadata(obj.LivelyInfo);
             libItem.ImagePath = obj.Image;
-            var downloadFile = Path.Combine(Constants.CommonPaths.TempDir, Path.ChangeExtension(libItem.LivelyInfo.Id, ".zip"));
+            var ext = galleryClient.UseVSthemes
+                ? await galleryClient.GetDownloadExtensionAsync(libItem.LivelyInfo.Id, cts.Token)
+                : ".zip";
+            var downloadFile = Path.Combine(Constants.CommonPaths.TempDir, libItem.LivelyInfo.Id + ext);
             var cts = new CancellationTokenSource();
             var downloadItem = (libItem.LivelyInfo.Id, cts);
             downloading.Add(downloadItem);
@@ -547,10 +550,34 @@ namespace Lively.UI.Shared.ViewModels
                     semaphoreSlimInstallLock.Release();
                 }
             }
-            else
+            else if (FileTypes.GetFileType(filePath) is not (WallpaperType)(-1))
             {
-                throw new InvalidOperationException("Not Lively .zip");
+                return await AddWallpaperFile(filePath, true);
             }
+            else if (Path.GetExtension(filePath).Equals(".zip", StringComparison.OrdinalIgnoreCase))
+            {
+                await semaphoreSlimInstallLock.WaitAsync();
+                string installDir = null;
+                try
+                {
+                    installDir = Path.Combine(Constants.CommonPaths.TempDir, Path.GetRandomFileName());
+                    await Task.Run(() => ZipExtract.ZipExtractFile(filePath, installDir, false));
+                    var video = Directory.GetFiles(installDir, "*.*", SearchOption.AllDirectories)
+                        .FirstOrDefault(f => FileTypes.GetFileType(f) is not (WallpaperType)(-1));
+                    if (video != null)
+                        return await AddWallpaperFile(video, true);
+                }
+                finally
+                {
+                    if (installDir != null && Directory.Exists(installDir))
+                    {
+                        try { Directory.Delete(installDir, true); } catch { }
+                    }
+                    semaphoreSlimInstallLock.Release();
+                }
+            }
+
+            throw new InvalidOperationException("Unsupported wallpaper format from Aurian Gallery");
         }
 
         public async Task<LibraryModel> AddWallpaperFile(string filePath, bool autoSetWallpaper)
